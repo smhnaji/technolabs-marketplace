@@ -37,9 +37,9 @@ class UserController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show()
     {
-        return $this->responseSuccess($user, 'Data retrieved successfully.');
+        return $this->responseSuccess(auth()->user(), 'Data retrieved successfully.');
     }
 
     /**
@@ -48,12 +48,13 @@ class UserController extends BaseController
      * @param UserUpdateRequest $request
      * @return string
      */
-    public function update(UserUpdateRequest $request, User $user)
+    public function update(UserUpdateRequest $request)
     {
+        $user = auth()->user();
         $user->update($request->validated());
 
         if (count($request->validated())) {
-            return $this->responseSuccess([], 'User updated sucessfully.');
+            return $this->responseSuccess($user, 'User updated sucessfully.');
         } else {
             return $this->responseFailure([], 'User update failed.');
         }
