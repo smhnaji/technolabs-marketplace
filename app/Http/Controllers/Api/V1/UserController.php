@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends BaseController
 {
@@ -16,7 +15,7 @@ class UserController extends BaseController
      */
     public function index()
     {
-        //
+        return $this->responseSuccess(User::paginate(3), 'Users retrieved successfully');
     }
 
     /**
@@ -25,9 +24,11 @@ class UserController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        $user = User::create($request->validated());
+
+        return $this->responseSuccess($user, 'User created successfully', 201);
     }
 
     /**
@@ -36,9 +37,9 @@ class UserController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show(User $user)
     {
-        return $this->responseSuccess(Auth::user(), 'Data retrieved successfully.');
+        return $this->responseSuccess($user, 'Data retrieved successfully.');
     }
 
     /**
@@ -47,15 +48,14 @@ class UserController extends BaseController
      * @param UserUpdateRequest $request
      * @return string
      */
-    public function update(UserUpdateRequest $request)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        $user = Auth::user();
         $user->update($request->validated());
 
         if (count($request->validated())) {
             return $this->responseSuccess([], 'User updated sucessfully.');
         } else {
-            return $this->responseFailure([], 'User updated sucessfully.');
+            return $this->responseFailure([], 'User update failed.');
         }
     }
 
