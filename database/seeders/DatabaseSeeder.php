@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -20,6 +21,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com'
         ])->create();
 
-        User::factory(10)->create();
+        Shop::factory(10)->create()->each(function($store) {
+
+        });
+
+        User::factory(100)->create();
     }
 }
