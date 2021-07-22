@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Exception;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +19,7 @@ class HasSellerRole
     public function handle(Request $request, Closure $next)
     {
         if ($request->user()->role != 'seller') {
-            Response::HTTP_FORBIDDEN;
+            throw new Exception('You are not allowed to access seller restricted content.', Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);

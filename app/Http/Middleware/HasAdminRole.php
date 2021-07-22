@@ -3,8 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Exception;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class HasAdminRole
 {
@@ -18,7 +20,7 @@ class HasAdminRole
     public function handle(Request $request, Closure $next)
     {
         if ($request->user()->role != 'admin') {
-            Response::HTTP_FORBIDDEN;
+            throw new Exception('You are not allowed to access admin restricted content.', Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);
